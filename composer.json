@@ -1,6 +1,7 @@
 {
-	"name": "enyo/dropzone",
-	"description": "Handles drag and drop of files for you.",
+  "name": "vardot/dropzone",
+	"description": "forked from enyo/dropzone to be used as drupal-library",
+  "type": "drupal-library",
 	"homepage": "http://www.dropzonejs.com",
 	"keywords": [
 		"dragndrop",
