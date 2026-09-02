@@ -1,36 +1,61 @@
-<img alt="Dropzone.js" src="http://www.dropzonejs.com/images/new-logo.svg" />
+# Dropzone — laid out for Drupal, as a Drupal library
 
-Dropzone.js is a light weight JavaScript library that turns an HTML element into a dropzone.
-This means that a user can drag and drop a file onto it, and the file gets uploaded to the server via AJAX.
+This repository packages the **distribution build** of
+[Dropzone](https://github.com/dropzone/dropzone) as a Composer `drupal-library`, laid out under
+the filenames `drupal/dropzonejs` actually declares, so that a Drupal site can install it with
+Composer instead of copying files out of `node_modules` or extracting a zip by hand.
 
-* * *
+## Why the layout is repacked
 
-_If you want support, please use [stackoverflow](http://stackoverflow.com/) with the `dropzone.js` tag and not the
-GitHub issues tracker. Only post an issue here if you think you discovered a bug or have a feature request._
+`dropzonejs.libraries.yml` in `drupal/dropzonejs` loads:
 
-* * *
+```
+/libraries/dropzone/dropzone-min.js   { minified: true }
+/libraries/dropzone/dropzone.css      { minified: true }
+```
 
-**Please read the [contributing guidelines](CONTRIBUTING.md) before you start working on Dropzone!**
+**No Dropzone 5 release ships those filenames.** Upstream v5 `dist.zip` gives
+`dist/min/dropzone.min.js` and `dist/min/dropzone.min.css`; the flat `dropzone-min.js` naming only
+appeared in the Dropzone 6 line, which has not left beta since 2021. So neither an npm copy of
+`dropzone@5` nor the upstream v5 zip satisfies the module.
 
-<br>
-<div align="center">
-  <a href="https://gitlab.com/meno/dropzone/builds/artifacts/master/download?job=release"><strong>&gt;&gt; Download &lt;&lt;</strong></a>
-</div>
-<br>
-<br>
+This package resolves that by shipping the **stable 5.9.3 minified build under the names the module
+declares**, at the root of the library directory:
 
-This is no longer the official repository for Dropzone. I have switched to [gitlab.com](https://gitlab.com/meno/dropzone)
-as the primary location to continue development.
- 
-There are multiple reasons why I am switching from GitHub to GitLab, but one of the main reasons are the ridiculous
-issue tracker that GitHub is providing, *drowning* me in issues that I am unable to categorise or prioritize properly,
-the lack of proper continuous integration, and build files. I don't want the compiled `.js` files in my repository, and
-people regularly commit changes to the compiled files and create pull requests with them.
+| File here | Built from upstream 5.9.3 |
+|---|---|
+| `dropzone-min.js` | `dist/min/dropzone.min.js` |
+| `dropzone.css` | `dist/min/dropzone.min.css` |
+| `basic.css` | `dist/min/basic.min.css` |
+| `dropzone-amd-module.js` | `dist/min/dropzone-amd-module.min.js` |
+| `dropzone.js` | `dist/dropzone.js` (unminified, for debugging) |
 
-I will write a blog post soon, that goes into detail about why I am doing the switch.
+Both files the module loads are declared `minified: true`, so serving the minified builds under
+those names is what it expects.
 
-This repository will still remain, and always host the most up to date versions of dropzone, but only the distribution
-files!
+## Installation
 
-MIT License
------------
+```bash
+composer require vardot/dropzone
+```
+
+With `composer/installers` and the usual Drupal `installer-paths`, the files land at
+`web/libraries/dropzone/`, which is where `drupal/dropzonejs` looks.
+
+## Versioning
+
+Tags follow the upstream Dropzone release they are built from. `5.9.3` here is the distribution
+build of [dropzone/dropzone v5.9.3](https://github.com/dropzone/dropzone/releases/tag/v5.9.3).
+
+The `5.x` branch and the `5.9.3` tag onward carry this layout. Tags up to `v5.1.1`, and the
+`master` branch, are the original 2017 full fork and are left untouched.
+
+## Upstream
+
+- Source: https://github.com/dropzone/dropzone
+- Documentation: https://docs.dropzone.dev/
+- Licence: MIT (see [LICENSE](LICENSE)) — © Matias Meno
+
+## Maintainers
+
+- [Vardot](https://github.com/vardot)
